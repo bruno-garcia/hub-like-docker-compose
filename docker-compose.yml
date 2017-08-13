@@ -1,5 +1,18 @@
 version: '3'
 services:
+  api:
+    build: api/.
+    ports:
+     - "5000:5000"
+    depends_on:
+        - redis
+    environment:
+      Redis: "redis:6379"
+      ASPNETCORE_ENVIRONMENT: "Development"
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
   envoy:
     build: envoy/.
     ports:
