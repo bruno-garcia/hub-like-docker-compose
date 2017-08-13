@@ -1,0 +1,6 @@
+.idea
+.vscode
+.user
+
+bin/
+obj/

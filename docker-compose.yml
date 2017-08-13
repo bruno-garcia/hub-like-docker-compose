@@ -1,0 +1,19 @@
+version: '3'
+services:
+  envoy:
+    build: envoy/.
+    ports:
+     - "5001:5000"
+    depends_on:
+        - mssql
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=mssql;Database=master;User Id=sa;Password=taeTWPukaM8t6lliUals;MultipleActiveResultSets=true"
+      ASPNETCORE_ENVIRONMENT: "Development"
+  mssql:
+    image: "microsoft/mssql-server-linux"
+    ports:
+      - "1433:1433"
+    environment:
+      MSSQL_PID: "Developer"
+      SA_PASSWORD: "taeTWPukaM8t6lliUals"
+      ACCEPT_EULA: "Y"
