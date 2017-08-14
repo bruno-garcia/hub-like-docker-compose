@@ -6,8 +6,10 @@ services:
      - "5000:5000"
     depends_on:
         - redis
+        - envoy
     environment:
       Redis: "redis:6379"
+      Envoy: "http://envoy:5000"
       ASPNETCORE_ENVIRONMENT: "Development"
   redis:
     image: "redis:alpine"

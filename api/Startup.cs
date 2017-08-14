@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,23 +23,37 @@ namespace Api
 
             var redisConfiguration = Program.Configuration["Redis"];
             if (redisConfiguration == null) throw new ArgumentException("No Redis configuration provided.");
+            var envoyConfiguration = Program.Configuration["Envoy"];
+            if (envoyConfiguration == null) throw new ArgumentException("No Envoy configuration provided.");
 
             if (env.IsDevelopment())
             {
                 logger.LogInformation($"Connecting to: Redis: {redisConfiguration}");
+                logger.LogInformation($"Connecting to: Envoy: {envoyConfiguration}");
                 app.UseDeveloperExceptionPage();
             }
 
             var redis = ConnectionMultiplexer.Connect(redisConfiguration);
             applicationLifetime.ApplicationStopping.Register(() => redis.Dispose());
+            var envoyClient = new HttpClient
+            {
+                BaseAddress = new Uri(envoyConfiguration)
+            };
+            applicationLifetime.ApplicationStopping.Register(() => envoyClient.Dispose());
 
             app.Run(async (context) =>
             {
                 if (context.Request.Path.Value == "/favicon.ico")
                     return;
 
-                var counter = await redis.GetDatabase(0).StringIncrementAsync("ApiHitCounter");
-                await context.Response.WriteAsync($"Redis hit counter: {counter}");
+                var counterTask = redis.GetDatabase(0).StringIncrementAsync("ApiHitCounter");
+                var envoySaidTask = envoyClient.GetAsync("/");
+
+                await counterTask;
+                await envoySaidTask;
+
+                await context.Response.WriteAsync($@"Redis hit counter: {counterTask.Result}
+Envoy said: {await envoySaidTask.Result.Content.ReadAsStringAsync()}");
             });
         }
     }
