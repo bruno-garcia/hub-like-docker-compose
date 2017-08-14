@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,6 +16,7 @@ namespace Api
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime)
@@ -31,11 +32,18 @@ namespace Api
             var envoyConfiguration = Program.Configuration["Envoy"];
             if (envoyConfiguration == null) throw new ArgumentException("No Envoy configuration provided.");
 
+
             if (env.IsDevelopment())
             {
                 logger.LogInformation($"Connecting to: Redis: {redisConfiguration}");
                 logger.LogInformation($"Connecting to: Mongo: {mongoConfiguration}");
                 logger.LogInformation($"Connecting to: Envoy: {envoyConfiguration}");
+
+                app.UseCors(builder =>
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin());
+
                 app.UseDeveloperExceptionPage();
             }
 

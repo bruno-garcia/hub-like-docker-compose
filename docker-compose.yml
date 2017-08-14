@@ -1,5 +1,11 @@
 version: '3'
 services:
+  spa:
+    build: spa/.
+    ports:
+     - "80:80"
+    depends_on:
+        - api
   api:
     build: api/.
     ports:
@@ -10,8 +16,8 @@ services:
         - envoy
     environment:
       Redis: "redis:6379"
-      Envoy: "http://envoy:5000"
       Mongo: "mongodb://mongo:27017/?connectTimeoutMS=2000"
+      Envoy: "http://envoy:5000"
       ASPNETCORE_ENVIRONMENT: "Development"
   redis:
     image: "redis:alpine"
