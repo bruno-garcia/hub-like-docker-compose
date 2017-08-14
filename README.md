@@ -5,7 +5,7 @@ in bootstrapping an integration environment for automated tests for a non public
 For this PoC, a simplified version of this project will be recreated. The goal is simply to reach 
 all dependencies. In other words: it's all dummy code.
 
-The repo is composed by a Angular 4 SPA backed by a web API project written 
+The repo is composed of an Angular 4 SPA, backed by a web API written 
 in C# and .NET Core 2.0. This API backend has 3 external dependencies: MongoDB, Redis and yet 
 another web API called Envoy. Envoy is backed by a SQL Server database.
 
