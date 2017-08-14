@@ -40,7 +40,7 @@ another web API called Envoy. Envoy is backed by a SQL Server database.
 
 #### StackExchange.Redis on .NET Core 1.1:
 The Api project could not be done with .NET Core 1.1 due to [StackExchange.Redis not supporting DNS 
-resolution on Linux](/StackExchange/StackExchange.Redis/issues/463).
+resolution on Linux](https://github.com/StackExchange/StackExchange.Redis/issues/463).
 That's an issue due to the container linking by name. It will fail with:
 
 `This platform does not support connecting sockets to DNS endpoints via the instance Connect and ConnectAsync methods, due to the potential for a host name to map to multiple IP addresses and sockets becoming invalid for use after a failed connect attempt. Use the static ConnectAsync method, or provide to the instance methods the specific IPAddress desired.`
@@ -54,7 +54,7 @@ those settings with command-line arguments.
 
 Unfortunately, Angular CLI 1.3.0 doesn't support accessing environment variables.
 Ideally, access to `process.env` at build time from `environment.ts` would do the job.
-There's [a discussion going on](/angular/angular-cli/issues/4318) on Angular CLI repo, hopefully support will
+There's [a discussion going on](https://github.com/angular/angular-cli/issues/4318) on Angular CLI repo, hopefully support will
 be added soon.
 Until that, one of the work around proposed could be used. For this PoC I decided to add a `docker` environment.
 This way, before running `docker-compose up`, the configuration file `environment.docker.ts` can be patched 
@@ -79,13 +79,13 @@ dependencies bootstrapped through `docker-compose up`:
 To achieve that, the .NET application has to take command line arguments into its ConfigurationBuilder:
 
 `.AddCommandLine(args)` from `Microsoft.Extensions.Configuration.CommandLine` package.
-- [See example](/bruno-garcia/hub-like-docker-compose/blob/master/api/Program.cs)
+- [See example](https://github.com/bruno-garcia/hub-like-docker-compose/blob/master/api/Program.cs)
 
 In order to pass arguments to a container, after the `ENTRYPOINT`, it's required to define a `CMD`.
 With an empty array:
 
 `CMD []`
-- [See example](/bruno-garcia/hub-like-docker-compose/blob/master/api/Dockerfile)
+- [See example](https://github.com/bruno-garcia/hub-like-docker-compose/blob/master/api/Dockerfile)
 
 Nothing is provided to the executable by default. While still able to change configuration without
 the need to rebuild the image:
