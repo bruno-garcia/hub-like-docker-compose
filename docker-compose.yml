@@ -6,15 +6,21 @@ services:
      - "5000:5000"
     depends_on:
         - redis
+        - mongo
         - envoy
     environment:
       Redis: "redis:6379"
       Envoy: "http://envoy:5000"
+      Mongo: "mongodb://mongo:27017/?connectTimeoutMS=2000"
       ASPNETCORE_ENVIRONMENT: "Development"
   redis:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+  mongo:
+    image: "mongo:3.4.7"
+    ports:
+      - "27017:27017"
   envoy:
     build: envoy/.
     ports:
